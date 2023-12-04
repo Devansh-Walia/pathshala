@@ -1,0 +1,19 @@
+import { View, Image, StyleSheet, Text } from 'react-native'
+
+const SplashScreen = () => {
+  return (
+    <View style={styles.container}>
+      <Text>Hi there</Text>
+    </View>
+  )
+}
+
+export default SplashScreen
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+})
