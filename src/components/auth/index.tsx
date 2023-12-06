@@ -1,28 +1,15 @@
 import { supabase } from '../../lib/supabase'
 import React, { useState } from 'react'
-import { Alert, StyleSheet, View } from 'react-native'
+import { Alert, StyleSheet, Text, View } from 'react-native'
 
 import { Button, Input } from 'react-native-elements'
+import Login from './login'
 
 export default function Auth() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [signUp, setSignUp] = useState(false)
 
-  async function signInWithEmail() {
-    setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    })
-
-    if (error) Alert.alert(error.message)
-    setLoading(false)
-  }
-
-  async function signUpWithEmail() {
+  async function signUpWithEmail(email: string, password: string, name: string) {
     setLoading(true)
     const {
       data: { session },
@@ -44,8 +31,15 @@ export default function Auth() {
     setLoading(false)
   }
 
+  const toggleLoading = () => {
+    setLoading((prev) => !prev)
+  }
+
   return (
     <View style={styles.container}>
+      {/* <View>
+        <Text style={styles.heading}>Welcome!</Text>
+      </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         {signUp ? (
           <Input
@@ -76,12 +70,12 @@ export default function Auth() {
       </View>
       <View style={styles.verticallySpaced}>
         {signUp ? (
-          <View style={[styles.verticallySpaced, styles.mt20]}>
-            <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+          <View style={[styles.verticallySpaced]}>
+            <Button style={styles.roundedButton} title="Sign up" disabled={loading} onPress={signUpWithEmail} />
           </View>
         ) : (
           <View style={styles.verticallySpaced}>
-            <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+            <Button style={styles.roundedButton} title="Sign in" disabled={loading} onPress={signInWithEmail} />
           </View>
         )}
         <View style={styles.verticallySpaced}>
@@ -91,12 +85,19 @@ export default function Auth() {
             onPress={() => setSignUp(!signUp)}
           />
         </View>
-      </View>
+      </View> */}
+      <Login loading={loading} toggleLoading={toggleLoading} />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  heading: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
   container: {
     marginTop: 40,
     padding: 12,
@@ -111,5 +112,15 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
+  },
+  roundedButton: {
+    borderRadius: 40,
+    backgroundColor: '#000000',
+    padding: 10,
+    margin: 10,
+    width: 200,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
