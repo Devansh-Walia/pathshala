@@ -6,9 +6,12 @@ import { z } from 'zod'
 import Input from '../shared/input'
 import { supabase } from 'src/lib/supabase'
 
-type Props = {}
+type Props = {
+  onSubmit: () => void
+}
 
 const schema = z.object({
+  name: z.string().min(1).max(100),
   email: z.string().email(),
   password: z
     .string()
@@ -17,15 +20,15 @@ const schema = z.object({
     .regex(/(^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$)/g),
 })
 
-type LoginFormValues = z.infer<typeof schema>
+type SignUpFormValues = z.infer<typeof schema>
 
-const Login = (props: Props) => {
+const SignUp = (props: Props) => {
   const {
     register,
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>({
+  } = useForm<SignUpFormValues>({
     reValidateMode: 'onBlur',
     defaultValues: {
       email: '',
@@ -34,27 +37,46 @@ const Login = (props: Props) => {
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = async (data: LoginFormValues) => {
-    const { email, password } = data
-    const { error } = await supabase.auth.signInWithPassword({
+  const onSubmit = async (data: SignUpFormValues) => {
+    const { email, password, name } = data
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
+      options: {
+        data: {
+          name: name,
+        },
+      },
       email: email,
       password: password,
     })
 
     if (error) Alert.alert(error.message)
+    if (!session && !error) {
+      Alert.alert('Please check your inbox for email verification!')
+      props.onSubmit()
+    }
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Please enter your credentials to Login!</Text>
-      <Input<LoginFormValues>
+      <Text style={styles.heading}>Please enter your credentials to SignUp!</Text>
+      <Input<SignUpFormValues>
+        control={control}
+        name="name"
+        placeholder="Please enter your name"
+        label="Name"
+        error={errors.name?.message}
+      />
+      <Input<SignUpFormValues>
         control={control}
         name="email"
         placeholder="Please enter your email"
         label="Email"
         error={errors.email?.message}
       />
-      <Input<LoginFormValues>
+      <Input<SignUpFormValues>
         control={control}
         name="password"
         placeholder="Please enter your password"
@@ -62,8 +84,8 @@ const Login = (props: Props) => {
         error={errors.password?.message}
       />
       <Button
-        loading={isSubmitting}
         style={styles.button}
+        loading={isSubmitting}
         onPress={handleSubmit(onSubmit)}
         disabled={isSubmitting}
         title="Submit"
@@ -95,4 +117,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Login
+export default SignUp
