@@ -19,6 +19,7 @@
     "react-native-document-picker": "^9.0.1",
     "react-native-dotenv": "^3.4.9",
     "react-native-elements": "^3.4.3",
+    "react-native-svg": "^14.1.0",
     "react-native-url-polyfill": "^2.0.0",
     "zod": "^3.22.4"
   },
