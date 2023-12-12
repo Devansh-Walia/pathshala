@@ -1,6 +1,12 @@
 import React from 'react'
 import { Control, Controller, FieldValues, Path, RegisterOptions } from 'react-hook-form'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { KeyboardTypeOptions, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import Eye from 'src/assets/Eye'
+import EyeOff from 'src/assets/Eye-off'
+import { DarkScale } from 'src/lib/constants'
+import { getContentType } from 'src/lib/helpers'
+import { useTogglePasswordVisibility } from 'src/lib/hooks/password-visibility'
+import { InputType } from 'src/lib/types'
 
 type Props<TFieldValues extends FieldValues> = {
   label?: string
@@ -12,6 +18,8 @@ type Props<TFieldValues extends FieldValues> = {
     'setValueAs' | 'disabled' | 'valueAsNumber' | 'valueAsDate'
   >
   placeholder?: string
+  type?: InputType
+  keyBoardType?: KeyboardTypeOptions
 }
 
 function Input<TFieldValues extends FieldValues>({
@@ -21,7 +29,10 @@ function Input<TFieldValues extends FieldValues>({
   name,
   rules,
   placeholder,
+  type,
+  keyBoardType,
 }: Props<TFieldValues>) {
+  const { handlePasswordVisibility, passwordVisibility, rightIcon } = useTogglePasswordVisibility()
   return (
     <Controller
       control={control}
@@ -30,13 +41,34 @@ function Input<TFieldValues extends FieldValues>({
       render={({ field: { onChange, onBlur, value } }) => (
         <View style={styles.container}>
           {label && <Text style={styles.label}>{label}</Text>}
-          <TextInput
-            placeholder={placeholder}
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
+          <View>
+            <TextInput
+              placeholder={placeholder}
+              style={styles.input}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              secureTextEntry={type === 'password' ? passwordVisibility : false}
+              textContentType={getContentType(type)}
+              keyboardType={keyBoardType}
+            />
+            {type === 'password' ? (
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  right: 10,
+                  top: 15,
+                }}
+                onPress={handlePasswordVisibility}
+              >
+                {rightIcon === 'eye' ? (
+                  <Eye width={20} height={20} stroke={DarkScale.gray} />
+                ) : (
+                  <EyeOff width={20} height={20} stroke={DarkScale.gray} />
+                )}
+              </TouchableOpacity>
+            ) : null}
+          </View>
           {error && <Text style={styles.error}>{error}</Text>}
         </View>
       )}
