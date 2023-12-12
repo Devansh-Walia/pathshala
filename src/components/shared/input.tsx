@@ -3,10 +3,10 @@ import { Control, Controller, FieldValues, Path, RegisterOptions } from 'react-h
 import { KeyboardTypeOptions, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Eye from 'src/assets/Eye'
 import EyeOff from 'src/assets/Eye-off'
-import { DarkScale } from 'src/lib/constants'
-import { getContentType } from 'src/lib/helpers'
-import { useTogglePasswordVisibility } from 'src/lib/hooks/password-visibility'
-import { InputType } from 'src/lib/types'
+import { DarkScale } from 'src/utils/constants'
+import { getContentType } from 'src/utils/helpers'
+import { useTogglePasswordVisibility } from 'src/utils/hooks/password-visibility'
+import { InputType } from 'src/utils/types'
 
 type Props<TFieldValues extends FieldValues> = {
   label?: string

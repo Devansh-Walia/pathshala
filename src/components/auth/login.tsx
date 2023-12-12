@@ -4,7 +4,7 @@ import { Alert, StyleSheet, View } from 'react-native'
 import { Button, Text } from 'react-native-elements'
 import { z } from 'zod'
 import Input from '../shared/input'
-import { supabase } from 'src/lib/supabase'
+import { supabase } from 'src/utils/supabase'
 
 type Props = {}
 
