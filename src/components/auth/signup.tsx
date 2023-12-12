@@ -75,6 +75,7 @@ const SignUp = (props: Props) => {
         placeholder="Please enter your email"
         label="Email"
         error={errors.email?.message}
+        type="email"
       />
       <Input<SignUpFormValues>
         control={control}
@@ -82,6 +83,7 @@ const SignUp = (props: Props) => {
         placeholder="Please enter your password"
         label="Password"
         error={errors.password?.message}
+        type="password"
       />
       <Button
         style={styles.button}
