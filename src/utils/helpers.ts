@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { InputType, TextContentType } from './types'
 
 export const getContentType = (type: InputType | undefined): TextContentType => {
@@ -21,4 +22,15 @@ export const getContentType = (type: InputType | undefined): TextContentType => 
     default:
       return 'none'
   }
+}
+
+export const getFromAsyncStorage = async (key: string) => {
+  const value = await AsyncStorage.getItem(key)
+  if (value !== null) {
+    return value
+  }
+}
+
+export const setToAsyncStorage = async (key: string, value: string) => {
+  await AsyncStorage.setItem(key, value)
 }
