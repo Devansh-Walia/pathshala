@@ -6,6 +6,9 @@ import { supabase } from './utils/supabase'
 import Account from './components/account'
 import Auth from './components/auth'
 import SplashScreen from './components/spalshScreen'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -30,15 +33,17 @@ export default function App() {
   }, [])
 
   return (
-    <SafeAreaView style={styles.container}>
-      {loading ? (
-        <SplashScreen />
-      ) : session && session.user ? (
-        <Account key={session.user.id} session={session} />
-      ) : (
-        <Auth />
-      )}
-    </SafeAreaView>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaView style={styles.container}>
+        {loading ? (
+          <SplashScreen />
+        ) : session && session.user ? (
+          <Account key={session.user.id} session={session} />
+        ) : (
+          <Auth />
+        )}
+      </SafeAreaView>
+    </QueryClientProvider>
   )
 }
 
