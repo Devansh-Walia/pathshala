@@ -1,10 +1,11 @@
+import { signup } from '@api'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { Alert, StyleSheet, View } from 'react-native'
 import { Button, Text } from 'react-native-elements'
 import { z } from 'zod'
 import Input from '../shared/input'
-import { supabase } from 'src/utils/supabase'
 
 type Props = {
   onSubmit: () => void
@@ -37,26 +38,36 @@ const SignUp = (props: Props) => {
     resolver: zodResolver(schema),
   })
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: signup,
+    onSuccess: (data) => {
+      const {
+        error,
+        data: { session },
+      } = data
+
+      if (error) Alert.alert(error.toString())
+
+      if (!session && !error) {
+        Alert.alert('Please check your inbox for email verification!')
+        props.onSubmit()
+      }
+
+      Alert.alert('Success', 'Logged in successfully!')
+    },
+    onError: (error) => {
+      Alert.alert('Error', error.message)
+    },
+  })
+
   const onSubmit = async (data: SignUpFormValues) => {
     const { email, password, name } = data
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      options: {
-        data: {
-          name: name,
-        },
-      },
-      email: email,
-      password: password,
-    })
 
-    if (error) Alert.alert(error.message)
-    if (!session && !error) {
-      Alert.alert('Please check your inbox for email verification!')
-      props.onSubmit()
-    }
+    mutate({
+      email,
+      password,
+      name,
+    })
   }
 
   return (
@@ -87,9 +98,9 @@ const SignUp = (props: Props) => {
       />
       <Button
         style={styles.button}
-        loading={isSubmitting}
         onPress={handleSubmit(onSubmit)}
-        disabled={isSubmitting}
+        disabled={isSubmitting || isPending}
+        loading={isSubmitting || isPending}
         title="Submit"
       />
     </View>

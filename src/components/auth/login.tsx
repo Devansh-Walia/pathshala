@@ -1,10 +1,11 @@
+import { login } from '@api'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { Alert, StyleSheet, View } from 'react-native'
 import { Button, Text } from 'react-native-elements'
 import { z } from 'zod'
 import Input from '../shared/input'
-import { supabase } from 'src/utils/supabase'
 
 type Props = {}
 
@@ -21,10 +22,9 @@ type LoginFormValues = z.infer<typeof schema>
 
 const Login = (props: Props) => {
   const {
-    register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isLoading },
   } = useForm<LoginFormValues>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -34,14 +34,29 @@ const Login = (props: Props) => {
     resolver: zodResolver(schema),
   })
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      const { error } = data
+
+      if (error) {
+        throw new Error(error.toString())
+      }
+
+      Alert.alert('Success', 'Logged in successfully!')
+    },
+    onError: (error) => {
+      Alert.alert('Error', error.message)
+    },
+  })
+
   const onSubmit = async (data: LoginFormValues) => {
     const { email, password } = data
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    })
 
-    if (error) Alert.alert(error.message)
+    mutate({
+      email,
+      password,
+    })
   }
 
   return (
@@ -64,10 +79,10 @@ const Login = (props: Props) => {
         type="password"
       />
       <Button
-        loading={isSubmitting}
         style={styles.button}
         onPress={handleSubmit(onSubmit)}
-        disabled={isSubmitting}
+        disabled={isSubmitting || isLoading || isPending}
+        loading={isSubmitting || isLoading || isPending}
         title="Submit"
       />
     </View>
