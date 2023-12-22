@@ -7,6 +7,7 @@ import Account from './components/account'
 import Auth from './components/auth'
 import SplashScreen from './components/spalshScreen'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { NavigationContainer } from '@react-navigation/native'
 
 const queryClient = new QueryClient()
 
@@ -34,15 +35,17 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SafeAreaView style={styles.container}>
-        {loading ? (
-          <SplashScreen />
-        ) : session && session.user ? (
-          <Account key={session.user.id} session={session} />
-        ) : (
-          <Auth />
-        )}
-      </SafeAreaView>
+      <NavigationContainer>
+        <SafeAreaView style={styles.container}>
+          {loading ? (
+            <SplashScreen />
+          ) : session && session.user ? (
+            <Account key={session.user.id} session={session} />
+          ) : (
+            <Auth />
+          )}
+        </SafeAreaView>
+      </NavigationContainer>
     </QueryClientProvider>
   )
 }
