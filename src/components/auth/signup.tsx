@@ -46,8 +46,10 @@ const SignUp = (props: Props) => {
         data: { session },
       } = data
 
-      if (error) Alert.alert(error.toString())
-
+      if (error) {
+        const errors = error.toString().split(':')
+        throw new Error(errors[errors.length - 1].trim())
+      }
       if (!session && !error) {
         Alert.alert('Please check your inbox for email verification!')
         props.onSubmit()

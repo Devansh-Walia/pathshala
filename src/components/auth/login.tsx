@@ -40,7 +40,8 @@ const Login = (props: Props) => {
       const { error } = data
 
       if (error) {
-        throw new Error(error.toString())
+        const errors = error.toString().split(':')
+        throw new Error(errors[errors.length - 1].trim())
       }
 
       Alert.alert('Success', 'Logged in successfully!')
