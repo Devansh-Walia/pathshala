@@ -54,8 +54,6 @@ const SignUp = (props: Props) => {
         Alert.alert('Please check your inbox for email verification!')
         props.onSubmit()
       }
-
-      Alert.alert('Success', 'Logged in successfully!')
     },
     onError: (error) => {
       Alert.alert('Error', error.message)
@@ -126,7 +124,6 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: 'white',
     borderColor: 'none',
-    height: 40,
     padding: 10,
     borderRadius: 4,
   },
