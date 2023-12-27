@@ -2,12 +2,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../supabase'
 import { useEffect } from 'react'
 
+const sessionKey = 'session'
+
 export const useSession = () => {
   const queryClient = useQueryClient()
 
   // Set up the query to fetch the session
   const { data: session, isLoading } = useQuery({
-    queryKey: ['session'],
+    queryKey: [sessionKey],
     queryFn: async () => {
       const { data } = await supabase.auth.getSession()
       return data.session
@@ -17,7 +19,7 @@ export const useSession = () => {
   useEffect(() => {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       // Update the session in the query cache when the auth state changes
-      queryClient.setQueryData(['session'], session)
+      queryClient.setQueryData([sessionKey], session)
     })
 
     return () => {
