@@ -1,52 +1,21 @@
-import { Session } from '@supabase/supabase-js'
-import { useEffect, useState } from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { SafeAreaView, StyleSheet } from 'react-native'
 import 'react-native-url-polyfill/auto'
-import { supabase } from './utils/supabase'
-import Account from './components/account'
-import Auth from './components/auth'
-import SplashScreen from './components/spalshScreen'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { NavigationContainer } from '@react-navigation/native'
-
-const queryClient = new QueryClient()
+import RootStack from './stacks/RootStack'
+import { asyncStoragePersister, queryClient } from './utils/queryClient'
 
 export default function App() {
-  const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setLoading(true)
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setLoading(false)
-    })
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-      setLoading(false)
-    })
-
-    return () => {
-      setLoading(false)
-    }
-  }, [])
+  const { session, isLoading } = { session: null, isLoading: false }
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
       <NavigationContainer>
         <SafeAreaView style={styles.container}>
-          {loading ? (
-            <SplashScreen />
-          ) : session && session.user ? (
-            <Account key={session.user.id} session={session} />
-          ) : (
-            <Auth />
-          )}
+          <RootStack />
         </SafeAreaView>
       </NavigationContainer>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   )
 }
 
