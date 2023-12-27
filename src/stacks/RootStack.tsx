@@ -1,7 +1,6 @@
-import Account from 'src/components/account'
 import Auth from 'src/components/auth'
-import { useSession } from 'src/utils/hooks/session'
 import SplashScreen from 'src/components/spalshScreen'
+import { useSession } from 'src/utils/hooks/session'
 import AppStack from './AppStack'
 
 const RootStack = () => {
