@@ -4,6 +4,7 @@ import { Button, Input } from 'react-native-elements'
 import { supabase } from '../../utils/supabase'
 import Avatar from '../avatar'
 import { useSession } from 'src/utils/hooks/session'
+import Toast from 'react-native-toast-message'
 
 export default function Account() {
   const { data: session, isLoading } = useSession()
@@ -59,17 +60,24 @@ export default function Account() {
 
       const updates = {
         id: session?.user.id,
-        username,
-        website,
+        full_name: username,
         avatar_url,
         updated_at: new Date(),
       }
 
-      const { error } = await supabase.from('profiles').upsert(updates)
+      console.log(updates, 'before updating profile')
+
+      const { error, ...rest } = await supabase.from('profiles').upsert(updates)
+
+      console.log(rest, 'after updating profile')
 
       if (error) {
         throw error
       }
+      Toast.show({
+        type: 'success',
+        text2: 'Profile updated successfully',
+      })
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message)
