@@ -1,14 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { SafeAreaView, StyleSheet } from 'react-native'
+import Toast from 'react-native-toast-message'
 import 'react-native-url-polyfill/auto'
 import RootStack from './stacks/RootStack'
 import { asyncStoragePersister, queryClient } from './utils/queryClient'
-import Toast from 'react-native-toast-message'
 
 export default function App() {
-  const { session, isLoading } = { session: null, isLoading: false }
-
   return (
     <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
       <NavigationContainer>
