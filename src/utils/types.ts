@@ -1,3 +1,5 @@
+import { USER_ROLES } from './constants'
+
 export type InputType = 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date'
 
 export type TextContentType =
@@ -29,3 +31,11 @@ export type TextContentType =
   | 'password'
   | 'newPassword'
   | 'oneTimeCode'
+
+export type ME = {
+  avatar_url: string
+  full_name: string
+  id: string
+  updated_at: string
+  user_role: USER_ROLES
+}
