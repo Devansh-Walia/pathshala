@@ -6,9 +6,15 @@ import useMeQuery from 'src/utils/hooks/me'
 
 const RootStack = () => {
   const { data: session, isLoading } = useSession()
-  useMeQuery()
+  const { isLoading: isMeLoading } = useMeQuery()
 
-  return isLoading ? <SplashScreen /> : session && session.user ? <AppStack key={session.user.id} /> : <Auth />
+  return isLoading || isMeLoading ? (
+    <SplashScreen />
+  ) : session && session.user ? (
+    <AppStack key={session.user.id} />
+  ) : (
+    <Auth />
+  )
 }
 
 export default RootStack
