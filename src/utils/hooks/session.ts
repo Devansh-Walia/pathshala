@@ -8,7 +8,7 @@ export const useSession = () => {
   const queryClient = useQueryClient()
 
   // Set up the query to fetch the session
-  const { data: session, isLoading } = useQuery({
+  const { data: session, ...rest } = useQuery({
     queryKey: [sessionKey],
     queryFn: async () => {
       const { data } = await supabase.auth.getSession()
@@ -28,5 +28,5 @@ export const useSession = () => {
     }
   }, [queryClient])
 
-  return { data: session, isLoading }
+  return { data: session, ...rest }
 }
