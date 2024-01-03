@@ -16,27 +16,26 @@ const KidsScreen = (props: Props) => {
       </Text>
       <Table>
         <Row>
-          <Cell isHeader>Header 1</Cell>
-          <Cell isHeader>Header 2</Cell>
-          <Cell isHeader>Header 3</Cell>
-          <Cell isHeader>Header 4</Cell>
+          <Cell isHeader>Name</Cell>
+          <Cell isHeader>Class</Cell>
+          <Cell isHeader>Age</Cell>
         </Row>
         {isLoading ? (
           <ActivityIndicator style={styles.activity} />
         ) : (
           <>
-            <Row>
-              <Cell>Row 1 Col 1</Cell>
-              <Cell>Row 1 Col 2</Cell>
-              <Cell>Row 1 Col 3</Cell>
-              <Cell>Row 1 Col 4</Cell>
-            </Row>
-            <Row>
-              <Cell>Row 2 Col 1</Cell>
-              <Cell>Row 2 Col 2Long Content</Cell>
-              <Cell>Row 2 Col 3</Cell>
-              <Cell>Row 2 Col 4</Cell>
-            </Row>
+            {kids &&
+              kids.map((kid) => {
+                const { class: kidsClass, id, date_of_birth, name } = kid
+                const age = new Date().getFullYear() - new Date(date_of_birth).getFullYear()
+                return (
+                  <Row key={id}>
+                    <Cell>{name}</Cell>
+                    <Cell>{kidsClass}</Cell>
+                    <Cell>{age}</Cell>
+                  </Row>
+                )
+              })}
           </>
         )}
       </Table>
@@ -51,6 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: 10,
+    alignItems: 'center',
   },
   heading: {
     fontSize: 20,

@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../supabase'
+import { kidsList } from '../types'
 
 export const getKidsQK = 'GetKids'
 
 const useGetKids = () => {
-  const { data, ...rest } = useQuery({
+  const { data, ...rest } = useQuery<kidsList, Error>({
     queryKey: [getKidsQK],
     queryFn: async () => {
       const response = await supabase.from('kids').select('*').order('created_at')
@@ -13,7 +14,7 @@ const useGetKids = () => {
         throw new Error('kids not found')
       }
 
-      return response.data
+      return response.data as kidsList
     },
   })
 

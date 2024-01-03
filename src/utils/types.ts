@@ -39,3 +39,14 @@ export type ME = {
   updated_at: string
   user_role: USER_ROLES
 }
+
+export type Kid = {
+  class: string
+  created_at: Date
+  date_of_birth: Date
+  id: string
+  name: String
+  updated_at: Date
+}
+
+export type kidsList = Kid[]
