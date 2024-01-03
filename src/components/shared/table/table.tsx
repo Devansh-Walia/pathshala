@@ -5,7 +5,7 @@ interface TableProps {
   children: ReactNode
 }
 
-const TableRoot = ({ children }: TableProps) => {
+const Table = ({ children }: TableProps) => {
   return (
     <ScrollView horizontal>
       <View style={styles.container}>{children}</View>
@@ -15,8 +15,8 @@ const TableRoot = ({ children }: TableProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    marginTop: 10,
   },
 })
 
-export default TableRoot
+export default Table

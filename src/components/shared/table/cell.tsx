@@ -1,20 +1,22 @@
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 import { Text, View, ScrollView, StyleSheet } from 'react-native'
 
 interface CellProps {
   children: ReactNode
-  scrollable?: boolean
+  isHeader?: boolean
 }
 
-const Cell = ({ children, scrollable }: CellProps) => {
+const Cell = ({ children, isHeader = false }: CellProps) => {
+  const scrollable = typeof children === 'string' && children.length > 20
+
   return (
-    <View style={styles.cell}>
+    <View style={[styles.cell, isHeader ? styles.headerContainer : null]}>
       {scrollable ? (
         <ScrollView horizontal>
-          <Text>{children}</Text>
+          <Text style={[styles.text, isHeader ? styles.header : null]}>{children}</Text>
         </ScrollView>
       ) : (
-        <Text>{children}</Text>
+        <Text style={[styles.text, isHeader ? styles.header : null]}>{children}</Text>
       )}
     </View>
   )
@@ -26,7 +28,20 @@ const styles = StyleSheet.create({
     minWidth: 100,
     maxWidth: 100,
     padding: 10,
-    borderWidth: 1,
+    borderWidth: 0.5,
+    borderColor: '#ddd',
+    position: 'relative',
+    textAlign: 'center',
+  },
+  header: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  headerContainer: {
+    backgroundColor: '#79979980',
+    borderColor: '#79979980',
+  },
+  text: {
     textAlign: 'center',
   },
 })
