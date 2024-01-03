@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { View, ScrollView, StyleSheet } from 'react-native'
 
 interface TableProps {
   children: ReactNode
 }
 
-const TableRoot: React.FC<TableProps> = ({ children }) => {
+const TableRoot = ({ children }: TableProps) => {
   return (
     <ScrollView horizontal>
       <View style={styles.container}>{children}</View>

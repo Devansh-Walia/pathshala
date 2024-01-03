@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { Text, View, ScrollView, StyleSheet } from 'react-native'
 
 interface CellProps {
@@ -6,7 +6,7 @@ interface CellProps {
   scrollable?: boolean
 }
 
-const Cell: React.FC<CellProps> = ({ children, scrollable }) => {
+const Cell = ({ children, scrollable }: CellProps) => {
   return (
     <View style={styles.cell}>
       {scrollable ? (

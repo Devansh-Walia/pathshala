@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { View, StyleSheet } from 'react-native'
 
 interface RowProps {
   children: ReactNode
 }
 
-const Row: React.FC<RowProps> = ({ children }) => {
+const Row = ({ children }: RowProps) => {
   return <View style={styles.row}>{children}</View>
 }
 
