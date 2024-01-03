@@ -7,7 +7,7 @@ const useGetKids = () => {
   const { data, ...rest } = useQuery({
     queryKey: [getKidsQK],
     queryFn: async () => {
-      const response = await supabase.from('profiles').select('*').order('created_at')
+      const response = await supabase.from('kids').select('*').order('created_at')
 
       if (!response.data) {
         throw new Error('kids not found')
