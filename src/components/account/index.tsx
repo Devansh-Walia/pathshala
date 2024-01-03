@@ -65,11 +65,7 @@ export default function Account() {
         updated_at: new Date(),
       }
 
-      console.log(updates, 'before updating profile')
-
       const { error, ...rest } = await supabase.from('profiles').upsert(updates)
-
-      console.log(rest, 'after updating profile')
 
       if (error) {
         throw error

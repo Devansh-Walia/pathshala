@@ -6,7 +6,6 @@ type Props = {}
 
 const KidsScreen = (props: Props) => {
   const { kids, isLoading, error } = useGetKids()
-  console.log(kids)
 
   return (
     <View style={styles.container}>
