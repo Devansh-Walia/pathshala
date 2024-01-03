@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 
 import { StyleSheet, View, Alert, Image, Button } from 'react-native'
 import DocumentPicker, { isCancel, isInProgress, types } from 'react-native-document-picker'
+import { COLOR_CONSTANTS } from 'src/utils/constants'
 
 interface Props {
   size: number
@@ -115,8 +116,8 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   noImage: {
-    backgroundColor: '#333',
-    border: '1px solid rgb(200, 200, 200)',
+    backgroundColor: COLOR_CONSTANTS.gray.medium,
+    border: `1px solid ${COLOR_CONSTANTS.gray.light}`,
     borderRadius: 5,
   },
 })

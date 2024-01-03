@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react'
 import { Text, View, ScrollView, StyleSheet } from 'react-native'
+import { COLOR_CONSTANTS } from 'src/utils/constants'
 
 interface CellProps {
   children: ReactNode
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
     maxWidth: 100,
     padding: 10,
     borderWidth: 0.5,
-    borderColor: '#ddd',
+    borderColor: COLOR_CONSTANTS.gray.light,
     position: 'relative',
     textAlign: 'center',
   },
@@ -38,8 +39,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   headerContainer: {
-    backgroundColor: '#79979980',
-    borderColor: '#79979980',
+    backgroundColor: COLOR_CONSTANTS.beach.default,
+    borderColor: COLOR_CONSTANTS.beach.default,
   },
   text: {
     textAlign: 'center',

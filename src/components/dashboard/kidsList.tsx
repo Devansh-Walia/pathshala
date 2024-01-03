@@ -1,6 +1,7 @@
-import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Button, Platform, StyleSheet, Text, View } from 'react-native'
 import useGetKids from 'src/utils/hooks/getKids'
 import { Table, Cell, Row } from '../shared/table'
+import { COLOR_CONSTANTS } from 'src/utils/constants'
 
 type Props = {}
 
@@ -14,6 +15,7 @@ const KidsScreen = (props: Props) => {
         You'll find a list of all of our kids here, please use this page to only verify details of the students and mark
         your attendance
       </Text>
+
       <Table>
         <Row>
           <Cell isHeader>Name</Cell>
@@ -60,7 +62,7 @@ const styles = StyleSheet.create({
   },
   disclaimer: {
     textAlign: 'center',
-    color: '#666',
+    color: COLOR_CONSTANTS.gray.medium,
   },
   activity: {
     marginTop: 10,

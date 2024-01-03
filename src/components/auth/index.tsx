@@ -5,6 +5,7 @@ import { Alert, StyleSheet, Text, View } from 'react-native'
 import { Button, Input } from 'react-native-elements'
 import Login from './login'
 import SignUp from './signup'
+import { COLOR_CONSTANTS } from 'src/utils/constants'
 
 export default function Auth() {
   const [signUp, setSignUp] = useState(false)
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
   },
   roundedButton: {
     borderRadius: 40,
-    backgroundColor: '#000000',
+    backgroundColor: COLOR_CONSTANTS.black,
     padding: 10,
     margin: 10,
     width: 200,

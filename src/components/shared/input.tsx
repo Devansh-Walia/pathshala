@@ -3,7 +3,7 @@ import { Control, Controller, FieldValues, Path, RegisterOptions } from 'react-h
 import { KeyboardTypeOptions, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Eye from 'src/assets/Eye'
 import EyeOff from 'src/assets/Eye-off'
-import { DarkScale } from 'src/utils/constants'
+import { COLOR_CONSTANTS } from 'src/utils/constants'
 import { getContentType } from 'src/utils/helpers'
 import { useTogglePasswordVisibility } from 'src/utils/hooks/password-visibility'
 import { InputType } from 'src/utils/types'
@@ -62,9 +62,9 @@ function Input<TFieldValues extends FieldValues>({
                 onPress={handlePasswordVisibility}
               >
                 {rightIcon === 'eye' ? (
-                  <Eye width={20} height={20} stroke={DarkScale.gray} />
+                  <Eye width={20} height={20} stroke={COLOR_CONSTANTS.gray.default} />
                 ) : (
-                  <EyeOff width={20} height={20} stroke={DarkScale.gray} />
+                  <EyeOff width={20} height={20} stroke={COLOR_CONSTANTS.gray.default} />
                 )}
               </TouchableOpacity>
             ) : null}
@@ -84,11 +84,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 6,
-    color: DarkScale.gray,
+    color: COLOR_CONSTANTS.gray.default,
   },
   input: {
-    backgroundColor: '#fff',
-    borderColor: '#000',
+    backgroundColor: COLOR_CONSTANTS.white,
+    borderColor: COLOR_CONSTANTS.black,
     borderWidth: 1,
     borderRadius: 4,
     padding: 10,
