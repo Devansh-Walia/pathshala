@@ -1,79 +1,35 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+## Tech Stack Overview
 
-# Getting Started
+### Handling Forms: React Hooks Forms
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+- **Description:** React Hooks Forms is a library for managing forms in React applications using the Hooks API. It simplifies form handling by providing a set of hooks that allow you to easily manage form state, handle form submission, and interact with form inputs.
+- **Key Features:**
+  - Utilizes React Hooks for a more concise and efficient form management approach.
+  - Offers hooks for form state, input control, and form submission.
+  - Provides a clean and declarative way to handle complex forms in React applications.
 
-## Step 1: Start the Metro Server
+### Sessions, Queries and Mutations: React Query
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+- **Description:** React Query is a library designed for managing and caching server state in React applications. It focuses on making data fetching, caching, and state management seamless, especially in scenarios like API calls and data synchronization.
+- **Key Features:**
+  - Simplifies the management of remote data fetching and caching.
+  - Introduces hooks for querying and mutating data with automatic caching.
+  - Enables efficient updates of UI components based on the latest data from the server.
 
-To start Metro, run the following command from the _root_ of your React Native project:
+### Validations and Type Safety: ZOD
 
-```bash
-# using npm
-npm start
+- **Description:** ZOD is a TypeScript-first schema declaration and validation library. It allows you to define data structures with clear type annotations and provides a robust validation mechanism to ensure data integrity.
+- **Key Features:**
+  - Designed with TypeScript in mind, offering strong type safety.
+  - Enables the creation of schemas for data validation and type enforcement.
+  - Useful for ensuring that data conforms to expected shapes and formats, reducing runtime errors.
 
-# OR using Yarn
-yarn start
-```
+### Backend Management: Supabase
 
-## Step 2: Start your Application
+- **Description:** Supabase is an open-source alternative to Firebase that provides a set of tools for building backend functionality without the need for a separate server. It includes features like authentication, real-time database, and serverless functions, making backend management more accessible for developers.
+- **Key Features:**
+  - Offers a variety of backend services, including authentication, database, and serverless functions.
+  - Simplifies backend development with a focus on ease of use and scalability.
+  - Provides real-time capabilities for building dynamic and responsive applications.
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+---
