@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Alert, ScrollView, StyleSheet, View } from 'react-native'
 import { Button, Input } from 'react-native-elements'
 import { supabase } from '../../utils/supabase'
-import Avatar from '../avatar'
+import Avatar from '../shared/avatar'
 import { useSession } from 'src/utils/hooks/session'
 import Toast from 'react-native-toast-message'
 
