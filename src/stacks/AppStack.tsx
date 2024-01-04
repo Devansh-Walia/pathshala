@@ -5,6 +5,7 @@ import { USER_ROLES } from 'src/utils/constants'
 import useMeQuery from 'src/utils/hooks/me'
 import Account from '../components/account'
 import AttendanceStack from './AttendanceStack'
+import { ATTENDANCE_STACK_KEYS } from 'src/utils/enums'
 
 type Props = {}
 
@@ -22,7 +23,7 @@ const AppStack = (props: Props) => {
         options={{
           headerShown: false,
         }}
-        name="AttendanceStack"
+        name={ATTENDANCE_STACK_KEYS.StackName}
         component={AttendanceStack}
       />
       {isAdmin ? <Tab.Screen name="Teachers List" component={TeachersScreen} /> : null}

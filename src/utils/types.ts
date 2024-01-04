@@ -1,4 +1,5 @@
 import { USER_ROLES } from './constants'
+import { ATTENDANCE_STACK_KEYS } from './enums'
 
 export type InputType = 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date'
 
@@ -52,6 +53,6 @@ export type Kid = {
 export type kidsList = Kid[]
 
 export type AttendanceStackParamList = {
-  Kids: {}
-  Attendance: {}
+  [ATTENDANCE_STACK_KEYS.Kids]: {}
+  [ATTENDANCE_STACK_KEYS.Attendance]: {}
 }

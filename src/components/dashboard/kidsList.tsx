@@ -6,8 +6,9 @@ import Toast from 'react-native-toast-message'
 import Button from '../shared/button'
 import { StackScreenProps } from '@react-navigation/stack'
 import { AttendanceStackParamList } from 'src/utils/types'
+import { ATTENDANCE_STACK_KEYS } from 'src/utils/enums'
 
-type Props = StackScreenProps<AttendanceStackParamList, 'Kids', 'AttendanceStack'>
+type Props = StackScreenProps<AttendanceStackParamList, ATTENDANCE_STACK_KEYS.Kids, 'AttendanceStack'>
 
 const KidsScreen = ({ navigation }: Props) => {
   const { kids, isLoading, error } = useGetKids()
@@ -34,8 +35,8 @@ const KidsScreen = ({ navigation }: Props) => {
           label="Fill today's attendance"
           onClick={() => {
             navigation.navigate({
-              key: 'AttendanceStack',
-              name: 'Attendance',
+              key: ATTENDANCE_STACK_KEYS.StackName,
+              name: ATTENDANCE_STACK_KEYS.Attendance,
             })
           }}
         />
