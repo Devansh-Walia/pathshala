@@ -1,5 +1,5 @@
 import Auth from 'src/components/auth'
-import SplashScreen from 'src/components/spalshScreen'
+import SplashScreen from 'src/components/shared/splashScreen'
 import { useSession } from 'src/utils/hooks/session'
 import AppStack from './AppStack'
 import useMeQuery from 'src/utils/hooks/me'

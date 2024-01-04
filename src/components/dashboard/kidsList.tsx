@@ -1,12 +1,25 @@
-import { ActivityIndicator, Button, Platform, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native'
 import useGetKids from 'src/utils/hooks/getKids'
 import { Table, Cell, Row } from '../shared/table'
 import { COLOR_CONSTANTS } from 'src/utils/constants'
+import Toast from 'react-native-toast-message'
+import Button from '../shared/button'
+import { StackScreenProps } from '@react-navigation/stack'
+import { AttendanceStackParamList } from 'src/utils/types'
 
-type Props = {}
+type Props = StackScreenProps<AttendanceStackParamList, 'Kids', 'AttendanceStack'>
 
-const KidsScreen = (props: Props) => {
+const KidsScreen = ({ navigation }: Props) => {
   const { kids, isLoading, error } = useGetKids()
+
+  if (error) {
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: error.message,
+      position: 'bottom',
+    })
+  }
 
   return (
     <View style={styles.container}>
@@ -15,6 +28,18 @@ const KidsScreen = (props: Props) => {
         You'll find a list of all of our kids here, please use this page to only verify details of the students and mark
         your attendance
       </Text>
+
+      <View style={styles.buttonWrapper}>
+        <Button
+          label="Fill today's attendance"
+          onClick={() => {
+            navigation.navigate({
+              key: 'AttendanceStack',
+              name: 'Attendance',
+            })
+          }}
+        />
+      </View>
 
       <Table>
         <Row>
@@ -66,5 +91,11 @@ const styles = StyleSheet.create({
   },
   activity: {
     marginTop: 10,
+  },
+  buttonWrapper: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
   },
 })

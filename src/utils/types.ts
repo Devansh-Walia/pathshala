@@ -50,3 +50,8 @@ export type Kid = {
 }
 
 export type kidsList = Kid[]
+
+export type AttendanceStackParamList = {
+  Kids: {}
+  Attendance: {}
+}
