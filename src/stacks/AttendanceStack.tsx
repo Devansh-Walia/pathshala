@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import { KidsScreen } from 'src/components/dashboard'
-import AttendanceForm from 'src/components/dashboard/attendanceForm'
+import AttendanceForm from 'src/components/dashboard/attendanceStack/attendanceForm'
+import KidsScreen from 'src/components/dashboard/attendanceStack/kidsList'
 import { ATTENDANCE_STACK_KEYS } from 'src/utils/enums'
 import { AttendanceStackParamList } from 'src/utils/types'
 
