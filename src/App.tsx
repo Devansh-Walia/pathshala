@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { SafeAreaView, StyleSheet } from 'react-native'
+import 'react-native-gesture-handler'
 import Toast from 'react-native-toast-message'
 import 'react-native-url-polyfill/auto'
 import RootStack from './stacks/RootStack'
