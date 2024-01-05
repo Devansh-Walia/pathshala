@@ -24,7 +24,6 @@ const KidsScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      {Platform.OS === 'android' ? <Text style={styles.heading}>Kids Screen</Text> : null}
       <Text style={styles.disclaimer}>
         You'll find a list of all of our kids here, please use this page to only verify details of the students and mark
         your attendance
