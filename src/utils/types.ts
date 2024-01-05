@@ -56,3 +56,8 @@ export type AttendanceStackParamList = {
   [ATTENDANCE_STACK_KEYS.Kids]: {}
   [ATTENDANCE_STACK_KEYS.Attendance]: {}
 }
+
+export enum BUCKET_PATH {
+  HIGHLIGHTS = 'highlights',
+  AVATARS = 'avatars',
+}
