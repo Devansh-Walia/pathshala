@@ -10,6 +10,10 @@ export const COLOR_CONSTANTS = {
   },
   black: '#00000A',
   white: '#FFFFFF',
+  alert: {
+    danger: '#FF4545',
+    dangerFaded: '#FF454590',
+  },
 }
 
 export enum USER_ROLES {

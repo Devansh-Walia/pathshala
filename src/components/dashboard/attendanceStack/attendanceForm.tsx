@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { StyleSheet, Text, View } from 'react-native'
 import Button from 'src/components/shared/button'
 import Input from 'src/components/shared/input'
+import PhotoPicker from 'src/components/shared/photoPicker'
 import { COLOR_CONSTANTS } from 'src/utils/constants'
 import { z } from 'zod'
 
@@ -77,6 +78,8 @@ const AttendanceForm = (props: Props) => {
           />
           {errors.visitAt ? <Text style={styles.error}>{errors.visitAt.message}</Text> : null}
         </View>
+
+        <PhotoPicker />
 
         <View style={styles.buttonWrapper}>
           <Button label="Submit" onClick={handleSubmit(onSubmit)} loading={isLoading || isSubmitting} />
