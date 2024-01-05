@@ -1,6 +1,15 @@
 import React from 'react'
 import { Control, Controller, FieldValues, Path, RegisterOptions } from 'react-hook-form'
-import { KeyboardTypeOptions, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import {
+  KeyboardTypeOptions,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import Eye from 'src/assets/Eye'
 import EyeOff from 'src/assets/Eye-off'
 import { COLOR_CONSTANTS } from 'src/utils/constants'
@@ -20,6 +29,8 @@ type Props<TFieldValues extends FieldValues> = {
   placeholder?: string
   type?: InputType
   keyBoardType?: KeyboardTypeOptions
+  style?: StyleProp<ViewStyle>
+  multiline?: boolean
 }
 
 function Input<TFieldValues extends FieldValues>({
@@ -31,6 +42,8 @@ function Input<TFieldValues extends FieldValues>({
   placeholder,
   type,
   keyBoardType,
+  style,
+  multiline = false,
 }: Props<TFieldValues>) {
   const { handlePasswordVisibility, passwordVisibility, rightIcon } = useTogglePasswordVisibility()
   return (
@@ -44,23 +57,17 @@ function Input<TFieldValues extends FieldValues>({
           <View>
             <TextInput
               placeholder={placeholder}
-              style={styles.input}
+              style={[styles.input, multiline ? styles.multiline : null, style]}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
               secureTextEntry={type === 'password' ? passwordVisibility : false}
               textContentType={getContentType(type)}
               keyboardType={keyBoardType}
+              multiline={multiline}
             />
             {type === 'password' ? (
-              <TouchableOpacity
-                style={{
-                  position: 'absolute',
-                  right: 10,
-                  top: 15,
-                }}
-                onPress={handlePasswordVisibility}
-              >
+              <TouchableOpacity style={styles.icon} onPress={handlePasswordVisibility}>
                 {rightIcon === 'eye' ? (
                   <Eye width={20} height={20} stroke={COLOR_CONSTANTS.gray.default} />
                 ) : (
@@ -96,11 +103,21 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 10,
     height: 50,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+  },
+  multiline: {
+    height: 100,
   },
   error: {
     color: 'red',
     marginTop: 6,
     fontSize: 12,
+  },
+  icon: {
+    position: 'absolute',
+    right: 10,
+    top: 15,
   },
 })
 
