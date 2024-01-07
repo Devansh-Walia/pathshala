@@ -2,40 +2,68 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import RNDateTimePicker from '@react-native-community/datetimepicker'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { StyleSheet, Text, View } from 'react-native'
+import { Alert, StyleSheet, Text, View } from 'react-native'
 import Button from 'src/components/shared/button'
 import Input from 'src/components/shared/input'
-import PhotoPicker from 'src/components/shared/photoPicker'
+import PhotoPicker, { PickerResponse } from 'src/components/shared/photoPicker'
 import { COLOR_CONSTANTS } from 'src/utils/constants'
-import { z } from 'zod'
+import useAddAttendance from 'src/utils/hooks/addAttendence'
+import useMeQuery from 'src/utils/hooks/me'
+import useUpload from 'src/utils/hooks/uploadImage'
+import { AttendanceFormSchema, AttendanceFormValues } from 'src/utils/schema/attendaceForm'
 
 type Props = {}
 
-const schema = z.object({
-  email: z.string().email(),
-  highlight: z.string().optional(),
-  visitAt: z.date(),
-})
-
-type AttendanceFormValues = z.infer<typeof schema>
-
 const AttendanceForm = (props: Props) => {
+  const { me } = useMeQuery()
+
   const {
     handleSubmit,
     control,
     setValue,
     getValues,
     formState: { errors, isSubmitting, isLoading },
+    reset,
   } = useForm<AttendanceFormValues>({
     reValidateMode: 'onBlur',
     defaultValues: {
       visitAt: new Date(),
     },
-    resolver: zodResolver(schema),
+    resolver: zodResolver(AttendanceFormSchema),
+  })
+  console.log(errors, me)
+
+  const { mutateAsync: uploadFile } = useUpload()
+  const { mutate: saveAttendance, isPending } = useAddAttendance({
+    onSuccess() {
+      reset()
+    },
   })
 
-  const onSubmit = (values: AttendanceFormValues) => {
-    console.log(values)
+  const onSubmit = async (values: AttendanceFormValues) => {
+    try {
+      if (me) {
+        let imagePath: string | undefined
+
+        if (values.image) {
+          imagePath = await uploadFile(values.image)
+        }
+
+        console.log(values)
+
+        saveAttendance({
+          ...values,
+          image: imagePath || '',
+          user_id: me.id,
+        })
+      } else {
+        throw new Error('please close the app and try again')
+      }
+    } catch (e) {
+      console.log(e)
+
+      Alert.alert(e instanceof Error ? e.message : 'something went wrong')
+    }
   }
 
   return (
@@ -43,11 +71,10 @@ const AttendanceForm = (props: Props) => {
       <View style={styles.formContainer}>
         <Input<AttendanceFormValues>
           control={control}
-          name="email"
-          placeholder="Please enter your email"
-          label="Email"
-          error={errors.email?.message}
-          type="email"
+          name="name"
+          placeholder="Please enter your name"
+          label="Your name"
+          error={errors.name?.message}
           style={{
             borderColor: COLOR_CONSTANTS.beach.default,
           }}
@@ -79,10 +106,20 @@ const AttendanceForm = (props: Props) => {
           {errors.visitAt ? <Text style={styles.error}>{errors.visitAt.message}</Text> : null}
         </View>
 
-        <PhotoPicker />
+        <PhotoPicker
+          setFile={(file: PickerResponse) => {
+            setValue('image', file)
+          }}
+          error={errors.image ? ({ message: errors.image.message as string } as Error) : undefined}
+        />
 
         <View style={styles.buttonWrapper}>
-          <Button label="Submit" onClick={handleSubmit(onSubmit)} loading={isLoading || isSubmitting} />
+          <Button
+            label="Submit"
+            onClick={handleSubmit(onSubmit)}
+            loading={isLoading || isSubmitting || isPending}
+            disabled={isLoading || isSubmitting || isPending}
+          />
         </View>
       </View>
     </View>
