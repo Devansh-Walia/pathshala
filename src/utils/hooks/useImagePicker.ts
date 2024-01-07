@@ -1,12 +1,10 @@
-import { UseMutationResult, useMutation } from '@tanstack/react-query'
+import { UseMutationOptions, UseMutationResult, useMutation } from '@tanstack/react-query'
 import { Alert } from 'react-native'
 import DocumentPicker, { DocumentPickerResponse, isCancel, isInProgress, types } from 'react-native-document-picker'
 
-interface props {
-  type?: string
-}
-
-const useImagePicker = (): UseMutationResult<DocumentPickerResponse | undefined, Error, void, unknown> => {
+const useImagePicker = (
+  options?: UseMutationOptions<DocumentPickerResponse | undefined, Error, void, unknown>,
+): UseMutationResult<DocumentPickerResponse | undefined, Error, void, unknown> => {
   return useMutation({
     mutationFn: async () => {
       try {
@@ -31,6 +29,7 @@ const useImagePicker = (): UseMutationResult<DocumentPickerResponse | undefined,
         }
       }
     },
+    ...options,
   })
 }
 

@@ -1,17 +1,18 @@
-import { UseMutationResult, useMutation } from '@tanstack/react-query'
+import { UseMutationOptions, UseMutationResult, useMutation } from '@tanstack/react-query'
 import { Alert } from 'react-native'
 import { DocumentPickerResponse, isCancel, isInProgress } from 'react-native-document-picker'
 import { supabase } from '../supabase'
 import { BUCKET_PATH } from '../types'
 
 interface props {
-  to?: BUCKET_PATH
+  to: BUCKET_PATH
 }
 
-const useUpload = ({
-  to = BUCKET_PATH.HIGHLIGHTS,
-}: props): UseMutationResult<string | undefined, Error, DocumentPickerResponse | undefined, unknown> => {
-  const fromDirectory = to
+const useUpload = (
+  props?: props,
+  options?: UseMutationOptions<string | undefined, Error, DocumentPickerResponse | undefined, unknown>,
+): UseMutationResult<string | undefined, Error, DocumentPickerResponse | undefined, unknown> => {
+  const fromDirectory = props?.to || BUCKET_PATH.HIGHLIGHTS
   const mutation = useMutation({
     mutationFn: async (file: DocumentPickerResponse | undefined) => {
       try {
@@ -48,6 +49,7 @@ const useUpload = ({
         }
       }
     },
+    ...options,
   })
 
   return mutation
