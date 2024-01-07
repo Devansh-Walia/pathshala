@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { ActivityIndicator, Image, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
+import { DocumentPickerResponse } from 'react-native-document-picker'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import ImageIcon from 'src/assets/Image'
 import { COLOR_CONSTANTS } from 'src/utils/constants'
@@ -10,8 +11,9 @@ type Props = {
   fullHeight?: boolean
   label?: string
   rounded?: 'lg' | 'md' | 'sm' | 'full'
-  previewUrl?: string
   style?: StyleProp<TextStyle>
+  setFile: (file: DocumentPickerResponse) => void
+  error?: Error
 }
 
 const PhotoPicker = ({
@@ -19,11 +21,10 @@ const PhotoPicker = ({
   fullWidth = true,
   label = 'Photos please! If Any...',
   rounded = 'md',
-  previewUrl,
   style,
+  setFile,
+  error,
 }: Props) => {
-  const { data: file, mutate: pickImage, reset, status } = useImagePicker()
-
   const borderRadius = useMemo(() => {
     switch (rounded) {
       case 'lg':
@@ -61,9 +62,22 @@ const PhotoPicker = ({
     return baseStyle
   }, [fullWidth, fullHeight])
 
+  const {
+    data: file,
+    mutate: pickImage,
+    reset,
+    status,
+  } = useImagePicker({
+    onSuccess(data, variables, context) {
+      if (data) {
+        setFile(data)
+      }
+    },
+  })
+
   return (
     <TouchableOpacity
-      style={[styles, style]}
+      style={[styles, style, error ? { borderColor: COLOR_CONSTANTS.alert.danger } : null]}
       onPress={() => {
         pickImage()
       }}
@@ -89,6 +103,7 @@ const PhotoPicker = ({
           {label ? <Text style={[{ color: styles.borderColor, textAlign: 'center' }]}>{label}</Text> : null}
         </>
       )}
+      <Text style={styleSheet.error}>{error ? error.message : null}</Text>
     </TouchableOpacity>
   )
 }
@@ -117,4 +132,11 @@ const styleSheet = StyleSheet.create({
     textAlign: 'center',
     color: COLOR_CONSTANTS.alert.dangerFaded,
   },
+  error: {
+    position: 'absolute',
+    bottom: 0,
+    color: COLOR_CONSTANTS.alert.dangerFaded,
+  },
 })
+
+export type { DocumentPickerResponse as PickerResponse }
