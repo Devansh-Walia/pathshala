@@ -31,6 +31,7 @@ type Props<TFieldValues extends FieldValues> = {
   keyBoardType?: KeyboardTypeOptions
   style?: StyleProp<ViewStyle>
   multiline?: boolean
+  disabled?: boolean
 }
 
 function Input<TFieldValues extends FieldValues>({
@@ -44,6 +45,7 @@ function Input<TFieldValues extends FieldValues>({
   keyBoardType,
   style,
   multiline = false,
+  disabled = false,
 }: Props<TFieldValues>) {
   const { handlePasswordVisibility, passwordVisibility, rightIcon } = useTogglePasswordVisibility()
   return (
@@ -55,17 +57,31 @@ function Input<TFieldValues extends FieldValues>({
         <View style={styles.container}>
           {label && <Text style={styles.label}>{label}</Text>}
           <View>
-            <TextInput
-              placeholder={placeholder}
-              style={[styles.input, multiline ? styles.multiline : null, style]}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              secureTextEntry={type === 'password' ? passwordVisibility : false}
-              textContentType={getContentType(type)}
-              keyboardType={keyBoardType}
-              multiline={multiline}
-            />
+            {disabled ? (
+              <View
+                style={[
+                  styles.input,
+                  multiline ? styles.multiline : null,
+                  style,
+                  { backgroundColor: COLOR_CONSTANTS.gray.light },
+                ]}
+              >
+                <Text>{value}</Text>
+              </View>
+            ) : (
+              <TextInput
+                placeholder={placeholder}
+                style={[styles.input, multiline ? styles.multiline : null, style]}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                secureTextEntry={type === 'password' ? passwordVisibility : false}
+                textContentType={getContentType(type)}
+                keyboardType={keyBoardType}
+                multiline={multiline}
+              />
+            )}
+
             {type === 'password' ? (
               <TouchableOpacity style={styles.icon} onPress={handlePasswordVisibility}>
                 {rightIcon === 'eye' ? (
