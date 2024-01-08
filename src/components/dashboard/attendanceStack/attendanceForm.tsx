@@ -31,7 +31,6 @@ const AttendanceForm = (props: Props) => {
     },
     resolver: zodResolver(AttendanceFormSchema),
   })
-  console.log(errors, me)
 
   const { mutateAsync: uploadFile } = useUpload()
   const { mutate: saveAttendance, isPending } = useAddAttendance({
@@ -49,8 +48,6 @@ const AttendanceForm = (props: Props) => {
           imagePath = await uploadFile(values.image)
         }
 
-        console.log(values)
-
         saveAttendance({
           ...values,
           image: imagePath || '',
@@ -60,8 +57,6 @@ const AttendanceForm = (props: Props) => {
         throw new Error('please close the app and try again')
       }
     } catch (e) {
-      console.log(e)
-
       Alert.alert(e instanceof Error ? e.message : 'something went wrong')
     }
   }
