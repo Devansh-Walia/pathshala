@@ -5,7 +5,7 @@ import { supabase } from '../supabase'
 import { BUCKET_PATH } from '../types'
 
 interface props {
-  to: BUCKET_PATH
+  to?: BUCKET_PATH
 }
 
 const useUpload = (
