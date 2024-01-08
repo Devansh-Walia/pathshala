@@ -1,139 +1,132 @@
-import { useEffect, useState } from 'react'
-import { Alert, ScrollView, StyleSheet, View } from 'react-native'
-import { Button, Input } from 'react-native-elements'
-import { supabase } from '../../utils/supabase'
-import Avatar from '../shared/avatar'
-import { useSession } from 'src/utils/hooks/session'
-import Toast from 'react-native-toast-message'
+import { zodResolver } from '@hookform/resolvers/zod'
+import React, { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { StyleSheet, View } from 'react-native'
+import { z } from 'zod'
 
-export default function Account() {
-  const { data: session, isLoading } = useSession()
-  const [loading, setLoading] = useState(true)
-  const [username, setUsername] = useState('')
-  const [website, setWebsite] = useState('')
-  const [avatarUrl, setAvatarUrl] = useState('')
+import { Text } from 'react-native-elements'
+import Button from 'src/components/shared/button'
+import Input from 'src/components/shared/input'
+import { ACCEPTED_IMAGE_TYPES, COLOR_CONSTANTS, MAX_FILE_SIZE } from 'src/utils/constants'
+import useMeQuery from 'src/utils/hooks/me'
+import useUpdateProfile from 'src/utils/hooks/updateProfile'
+import useUpload from 'src/utils/hooks/uploadImage'
+import { BUCKET_PATH } from 'src/utils/types'
+import Avatar from '../shared/avatar'
+import useGetImageBlob from 'src/utils/hooks/getImage'
+
+const userSchema = z.object({
+  full_name: z.string().min(1, 'Name is required').optional(),
+  avatar: z
+    .any()
+    .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+      'Only .jpg, .jpeg, .png and .webp formats are supported.',
+    )
+    .optional(),
+  avatar_url: z.string().optional(),
+})
+
+export type UserSchemaValues = z.infer<typeof userSchema>
+
+export default function UserForm() {
+  const { me } = useMeQuery()
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors, isDirty },
+  } = useForm<UserSchemaValues>({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      full_name: me?.full_name || '',
+    },
+  })
+
+  const { mutateAsync: getImage, data: image } = useGetImageBlob()
+
+  const { mutateAsync: upload, status: isUploading } = useUpload({ to: BUCKET_PATH.AVATARS })
+
+  const { mutate: updateProfile, status: isUpdatingProfile } = useUpdateProfile({})
+
+  const onSubmit = async (values: UserSchemaValues) => {
+    if (isDirty && me?.id) {
+      if (values.avatar) {
+        await upload(values.avatar)
+      }
+
+      updateProfile({
+        id: me.id,
+        values: { full_name: values.full_name, avatar_url: values.avatar_url, updated_at: new Date() },
+      })
+    }
+  }
 
   useEffect(() => {
-    if (session) getProfile()
-  }, [session])
-
-  async function getProfile() {
-    try {
-      setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
-
-      const { data, error, status } = await supabase
-        .from('profiles')
-        .select(`username, website, avatar_url`)
-        .eq('id', session?.user.id)
-        .single()
-      if (error && status !== 406) {
-        throw error
-      }
-
-      if (data) {
-        setUsername(data.username)
-        setWebsite(data.website)
-        setAvatarUrl(data.avatar_url)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function updateProfile({
-    username,
-    website,
-    avatar_url,
-  }: {
-    username: string
-    website: string
-    avatar_url: string
-  }) {
-    try {
-      setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
-
-      const updates = {
-        id: session?.user.id,
-        full_name: username,
-        avatar_url,
-        updated_at: new Date(),
-      }
-
-      const { error, ...rest } = await supabase.from('profiles').upsert(updates)
-
-      if (error) {
-        throw error
-      }
-      Toast.show({
-        type: 'success',
-        text2: 'Profile updated successfully',
+    setValue('full_name', me?.full_name)
+    if (me?.avatar_url) {
+      getImage({
+        path: me.avatar_url,
+        from: BUCKET_PATH.AVATARS,
       })
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message)
-      }
-    } finally {
-      setLoading(false)
     }
-  }
+  }, [me])
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <View>
+      <View style={styles.formContainer}>
+        <View style={styles.avatarContainer}>
+          <Text style={styles.label}>Avatar</Text>
           <Avatar
-            size={200}
-            url={avatarUrl}
-            onUpload={(url: string) => {
-              setAvatarUrl(url)
-              updateProfile({ username, website, avatar_url: url })
-            }}
+            setFile={(file) => setValue('avatar', file)}
+            error={errors.avatar?.message ? new Error(errors.avatar?.message as string) : undefined}
+            url={image as string}
           />
         </View>
-        <View style={[styles.verticallySpaced, styles.mt20]}>
-          <Input label="Email" value={session?.user?.email} disabled />
-        </View>
-        <View style={styles.verticallySpaced}>
-          <Input label="Username" value={username || ''} onChangeText={(text) => setUsername(text)} />
-        </View>
-        <View style={styles.verticallySpaced}>
-          <Input label="Website" value={website || ''} onChangeText={(text) => setWebsite(text)} />
-        </View>
-
-        <View style={[styles.verticallySpaced, styles.mt20]}>
-          <Button
-            title={loading ? 'Loading ...' : 'Update'}
-            onPress={() => updateProfile({ username, website, avatar_url: avatarUrl })}
-            disabled={loading}
-          />
-        </View>
-
-        <View style={styles.verticallySpaced}>
-          <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
-        </View>
-      </ScrollView>
+        <Input control={control} name="full_name" label="Your Name" error={errors.full_name?.message} />
+        <Button
+          label="Submit"
+          onClick={handleSubmit(onSubmit)}
+          disabled={!isDirty || isUpdatingProfile === 'pending' || isUploading === 'pending'}
+          loading={isUpdatingProfile === 'pending' || isUploading === 'pending'}
+        />
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 12,
+    backgroundColor: COLOR_CONSTANTS.white,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  formContainer: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'stretch',
+    padding: 20,
+    width: '100%',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: 'stretch',
+  avatarContainer: {
+    alignItems: 'center',
+    width: '100%',
+    padding: 10,
   },
-  mt20: {
-    marginTop: 20,
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 6,
+    color: COLOR_CONSTANTS.gray.default,
   },
 })
