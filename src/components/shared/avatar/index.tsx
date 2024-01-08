@@ -1,123 +1,121 @@
-import { supabase } from '../../../utils/supabase'
-import { useState, useEffect } from 'react'
-
-import { StyleSheet, View, Alert, Image, Button } from 'react-native'
-import DocumentPicker, { isCancel, isInProgress, types } from 'react-native-document-picker'
+import { useMemo } from 'react'
+import { ActivityIndicator, Image, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
+import { DocumentPickerResponse } from 'react-native-document-picker'
+import { TouchableOpacity } from 'react-native'
+import ImageIcon from 'src/assets/Image'
 import { COLOR_CONSTANTS } from 'src/utils/constants'
+import useImagePicker from 'src/utils/hooks/useImagePicker'
+import CrossIcon from 'src/assets/Cross'
 
-interface Props {
-  size: number
-  url: string | null
-  onUpload: (filePath: string) => void
+type Props = {
+  fullWidth?: boolean
+  fullHeight?: boolean
+  style?: StyleProp<TextStyle>
+  setFile: (file: DocumentPickerResponse) => void
+  error?: Error
+  url?: string
 }
 
-export default function Avatar({ url, size = 150, onUpload }: Props) {
-  const [uploading, setUploading] = useState(false)
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
-  const avatarSize = { height: size, width: size }
-
-  useEffect(() => {
-    if (url) downloadImage(url)
-  }, [url])
-
-  async function downloadImage(path: string) {
-    try {
-      const { data, error } = await supabase.storage.from('avatars').download(path)
-
-      if (error) {
-        throw error
-      }
-
-      const fr = new FileReader()
-      fr.readAsDataURL(data)
-      fr.onload = () => {
-        setAvatarUrl(fr.result as string)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log('Error downloading image: ', error.message)
-      }
+const Avatar = ({ fullHeight = true, fullWidth = true, style, setFile, error, url }: Props) => {
+  const styles = useMemo(() => {
+    const baseStyle: ViewStyle = {
+      alignItems: 'center',
+      justifyContent: 'center',
+      elevation: 3,
+      width: 100,
+      height: 100,
+      borderColor: COLOR_CONSTANTS.beach.default,
+      borderWidth: 1,
+      borderRadius: 100,
     }
-  }
 
-  async function uploadAvatar() {
-    try {
-      setUploading(true)
+    return baseStyle
+  }, [fullWidth, fullHeight])
 
-      const file = await DocumentPicker.pickSingle({
-        presentationStyle: 'fullScreen',
-        copyTo: 'cachesDirectory',
-        type: types.images,
-        mode: 'open',
-      })
-      if (file) {
-        const photo = {
-          uri: file.fileCopyUri,
-          type: file.type,
-          name: file.name,
-        }
-
-        const formData = new FormData()
-        formData.append('file', photo)
-
-        const fileExt = file.name ? file.name.split('.').pop() : 'jpg'
-        const filePath = `${Math.random()}.${fileExt}`
-
-        const { error } = await supabase.storage.from('avatars').upload(filePath, formData)
-
-        if (error) {
-          throw error
-        }
-
-        onUpload(filePath)
+  const {
+    data: file,
+    mutate: pickImage,
+    reset,
+    status,
+  } = useImagePicker({
+    onSuccess(data, variables, context) {
+      if (data) {
+        setFile(data)
       }
-    } catch (error) {
-      if (isCancel(error)) {
-        console.warn('cancelled')
-        // User cancelled the picker, exit any dialogs or menus and move on
-      } else if (isInProgress(error)) {
-        console.warn('multiple pickers were opened, only the last will be considered')
-      } else if (error instanceof Error) {
-        Alert.alert(error.message)
-      } else {
-        throw error
-      }
-    } finally {
-      setUploading(false)
-    }
-  }
+    },
+  })
 
   return (
-    <View>
-      {avatarUrl ? (
-        <Image
-          source={{ uri: avatarUrl }}
-          accessibilityLabel="Avatar"
-          style={[avatarSize, styles.avatar, styles.image]}
-        />
+    <TouchableOpacity
+      style={[styles, style, error ? { borderColor: COLOR_CONSTANTS.alert.danger } : null]}
+      onPress={() => {
+        pickImage()
+      }}
+      disabled={file !== undefined}
+    >
+      {status !== 'pending' && file && (url || file.fileCopyUri) ? (
+        <View style={styleSheet.previewContainer}>
+          <TouchableOpacity
+            style={styleSheet.button}
+            onPress={() => {
+              reset()
+            }}
+          >
+            <CrossIcon width={15} height={15} stroke={COLOR_CONSTANTS.black} />
+          </TouchableOpacity>
+          <Image
+            source={{ uri: url ? url : file.fileCopyUri ? file.fileCopyUri : '' }}
+            style={styleSheet.preview}
+            accessibilityLabel="Preview"
+          />
+        </View>
+      ) : status === 'pending' ? (
+        <ActivityIndicator color={COLOR_CONSTANTS.gray.light} />
       ) : (
-        <View style={[avatarSize, styles.avatar, styles.noImage]} />
+        <ImageIcon style={styleSheet.preview} stroke={styles.borderColor} />
       )}
-      <View>
-        <Button title={uploading ? 'Uploading ...' : 'Upload'} onPress={uploadAvatar} disabled={uploading} />
-      </View>
-    </View>
+      <Text style={styleSheet.error}>{error ? error.message : null}</Text>
+    </TouchableOpacity>
   )
 }
 
-const styles = StyleSheet.create({
-  avatar: {
-    borderRadius: 5,
-    overflow: 'hidden',
-    maxWidth: '100%',
+export default Avatar
+
+const styleSheet = StyleSheet.create({
+  previewContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 4,
   },
-  image: {
-    objectFit: 'cover',
-    paddingTop: 0,
+  preview: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 100,
   },
-  noImage: {
-    backgroundColor: COLOR_CONSTANTS.gray.medium,
-    border: `1px solid ${COLOR_CONSTANTS.gray.light}`,
-    borderRadius: 5,
+  button: {
+    backgroundColor: COLOR_CONSTANTS.white,
+    shadowColor: COLOR_CONSTANTS.black,
+    position: 'absolute',
+    padding: 4,
+    borderRadius: 100,
+    elevation: 5,
+    zIndex: 3,
+    top: '-10%',
+    right: '10%',
+    shadowOffset: { width: 0, height: 2 },
+  },
+  buttonText: {
+    height: 3,
+    width: 3,
+  },
+  error: {
+    position: 'absolute',
+    bottom: 0,
+    color: COLOR_CONSTANTS.alert.dangerFaded,
   },
 })
+
+export type { DocumentPickerResponse as AvatarResponse }
