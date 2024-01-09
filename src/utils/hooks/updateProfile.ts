@@ -20,7 +20,6 @@ const useUpdateProfile = (options?: UseMutationOptions<ME, Error, { id: string; 
       if (error) {
         throw new Error('Something went wrong while updating your profile.')
       }
-      console.log(data, 'in success')
 
       return data as ME
     },
