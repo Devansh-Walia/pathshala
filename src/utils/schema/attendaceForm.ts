@@ -14,6 +14,7 @@ const schema = z.object({
       'Only .jpg, .jpeg, .png and .webp formats are supported.',
     )
     .optional(),
+  kids: z.array(z.string()).optional(),
 })
 
 export type AttendanceFormValues = z.infer<typeof schema>
