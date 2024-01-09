@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 interface RowProps {
   children: ReactNode
@@ -9,9 +9,9 @@ interface RowProps {
 const Row = ({ children, onPress }: RowProps) => {
   if (onPress) {
     return (
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableOpacity onPress={onPress}>
         <View style={styles.row}>{children}</View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     )
   }
   return <View style={styles.row}>{children}</View>
