@@ -1,11 +1,19 @@
 import { ReactNode } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 
 interface RowProps {
   children: ReactNode
+  onPress?: () => void
 }
 
-const Row = ({ children }: RowProps) => {
+const Row = ({ children, onPress }: RowProps) => {
+  if (onPress) {
+    return (
+      <TouchableWithoutFeedback onPress={onPress}>
+        <View style={styles.row}>{children}</View>
+      </TouchableWithoutFeedback>
+    )
+  }
   return <View style={styles.row}>{children}</View>
 }
 
