@@ -3,7 +3,7 @@ import { View, Image, StyleSheet, Text } from 'react-native'
 const SplashScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>Hi there</Text>
+      <Text>study away</Text>
     </View>
   )
 }
