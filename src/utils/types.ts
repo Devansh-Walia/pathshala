@@ -1,5 +1,5 @@
 import { USER_ROLES } from './constants'
-import { ATTENDANCE_STACK_KEYS } from './enums'
+import { ATTENDANCE_STACK_KEYS, TEACHER_STACK_KEYS } from './enums'
 
 export type InputType = 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date'
 
@@ -33,7 +33,7 @@ export type TextContentType =
   | 'newPassword'
   | 'oneTimeCode'
 
-export type ME = {
+export type Profiles = {
   avatar_url: string
   full_name: string
   id: string
@@ -51,10 +51,18 @@ export type Kid = {
 }
 
 export type kidsList = Kid[]
+export type Teachers = Profiles[]
 
 export type AttendanceStackParamList = {
   [ATTENDANCE_STACK_KEYS.Kids]: {}
   [ATTENDANCE_STACK_KEYS.Attendance]: {}
+}
+
+export type TeacherStackParamList = {
+  [TEACHER_STACK_KEYS.Teachers]: {}
+  [TEACHER_STACK_KEYS.Teacher]: {
+    id: string
+  }
 }
 
 export enum BUCKET_PATH {
