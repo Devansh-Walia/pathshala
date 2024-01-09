@@ -1,11 +1,11 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { TeachersScreen } from 'src/components/dashboard'
 import SplashScreen from 'src/components/shared/splashScreen'
 import { USER_ROLES } from 'src/utils/constants'
 import useMeQuery from 'src/utils/hooks/me'
 import Account from '../components/account'
 import AttendanceStack from './AttendanceStack'
 import { ATTENDANCE_STACK_KEYS } from 'src/utils/enums'
+import TeacherStack from './TeacherStack'
 
 type Props = {}
 
@@ -26,7 +26,15 @@ const AppStack = (props: Props) => {
         name={ATTENDANCE_STACK_KEYS.StackName}
         component={AttendanceStack}
       />
-      {isAdmin ? <Tab.Screen name="Teachers List" component={TeachersScreen} /> : null}
+      {isAdmin ? (
+        <Tab.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Teachers List"
+          component={TeacherStack}
+        />
+      ) : null}
       <Tab.Screen name="Account" component={Account} />
     </Tab.Navigator>
   )
