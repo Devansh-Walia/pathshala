@@ -14,21 +14,7 @@ import useUpload from 'src/utils/hooks/uploadImage'
 import { BUCKET_PATH } from 'src/utils/types'
 import Avatar from '../shared/avatar'
 import useGetImageBlob from 'src/utils/hooks/getImage'
-
-const userSchema = z.object({
-  full_name: z.string().min(1, 'Name is required').optional(),
-  avatar: z
-    .any()
-    .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      'Only .jpg, .jpeg, .png and .webp formats are supported.',
-    )
-    .optional(),
-  avatar_url: z.string().optional(),
-})
-
-export type UserSchemaValues = z.infer<typeof userSchema>
+import { UserSchema, UserSchemaValues } from 'src/utils/schema/profileForm'
 
 export default function UserForm() {
   const { me } = useMeQuery()
@@ -39,7 +25,7 @@ export default function UserForm() {
     setValue,
     formState: { errors, isDirty },
   } = useForm<UserSchemaValues>({
-    resolver: zodResolver(userSchema),
+    resolver: zodResolver(UserSchema),
     defaultValues: {
       full_name: me?.full_name || '',
     },

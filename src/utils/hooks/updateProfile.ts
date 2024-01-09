@@ -1,13 +1,13 @@
 import { UseMutationOptions, useMutation } from '@tanstack/react-query'
 import { supabase } from '../supabase'
 import { Profiles as ME } from '../types'
-import { UserSchemaValues } from 'src/components/account'
+import { UserSchemaValues } from '../schema/profileForm'
 
 interface UserUpdateValues extends UserSchemaValues {
   updated_at: Date
 }
 
-const useUpdateProfile = (options?: UseMutationOptions<ME, Error, { id: string; values: {} }>) => {
+const useUpdateProfile = (options?: UseMutationOptions<ME, Error, { id: string; values: UserSchemaValues }>) => {
   return useMutation({
     mutationFn: async (props: { id: string; values: UserUpdateValues }) => {
       const { data, error } = await supabase
