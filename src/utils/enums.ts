@@ -3,3 +3,9 @@ export enum ATTENDANCE_STACK_KEYS {
   Attendance = 'Attendance',
   StackName = 'AttendanceStack',
 }
+
+export enum TEACHER_STACK_KEYS {
+  Teachers = 'Teachers',
+  Teacher = 'Teacher',
+  StackName = 'TeacherStack',
+}
