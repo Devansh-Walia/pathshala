@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSession } from './session'
 import { UseQueryOptions, useQuery } from '@tanstack/react-query'
 import { supabase } from '../supabase'
-import { ME } from '../types'
+import { Profiles as ME } from '../types'
 
 const useMeQuery = (options?: UseQueryOptions) => {
   const [userId, setUserId] = useState<string | null>(null)

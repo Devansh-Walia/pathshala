@@ -1,6 +1,6 @@
 import { UseMutationOptions, useMutation } from '@tanstack/react-query'
 import { supabase } from '../supabase'
-import { ME } from '../types'
+import { Profiles as ME } from '../types'
 import { UserSchemaValues } from 'src/components/account'
 
 interface UserUpdateValues extends UserSchemaValues {
