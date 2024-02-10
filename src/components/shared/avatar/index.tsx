@@ -16,6 +16,7 @@ type Props = {
   url?: string
 }
 
+// todo: look why the profile image is not showing
 const Avatar = ({ fullHeight = true, fullWidth = true, style, setFile, error, url }: Props) => {
   const styles = useMemo(() => {
     const baseStyle: ViewStyle = {
@@ -36,7 +37,7 @@ const Avatar = ({ fullHeight = true, fullWidth = true, style, setFile, error, ur
     data: file,
     mutate: pickImage,
     reset,
-    status,
+    isPending,
   } = useImagePicker({
     onSuccess(data, variables, context) {
       if (data) {
@@ -44,6 +45,14 @@ const Avatar = ({ fullHeight = true, fullWidth = true, style, setFile, error, ur
       }
     },
   })
+
+  const formattedUrl = url
+    ? url.startsWith('data:image')
+      ? url
+      : `data:image/png;base64,${url}`
+    : file
+    ? file.fileCopyUri
+    : ''
 
   return (
     <TouchableOpacity
@@ -53,7 +62,7 @@ const Avatar = ({ fullHeight = true, fullWidth = true, style, setFile, error, ur
       }}
       disabled={file !== undefined}
     >
-      {status !== 'pending' && file && (url || file.fileCopyUri) ? (
+      {!isPending && file && formattedUrl ? (
         <View style={styleSheet.previewContainer}>
           <TouchableOpacity
             style={styleSheet.button}
@@ -63,13 +72,9 @@ const Avatar = ({ fullHeight = true, fullWidth = true, style, setFile, error, ur
           >
             <CrossIcon width={15} height={15} stroke={COLOR_CONSTANTS.black} />
           </TouchableOpacity>
-          <Image
-            source={{ uri: url ? url : file.fileCopyUri ? file.fileCopyUri : '' }}
-            style={styleSheet.preview}
-            accessibilityLabel="Preview"
-          />
+          <Image source={{ uri: formattedUrl }} style={styleSheet.preview} accessibilityLabel="Avatar" />
         </View>
-      ) : status === 'pending' ? (
+      ) : isPending ? (
         <ActivityIndicator color={COLOR_CONSTANTS.gray.light} />
       ) : (
         <ImageIcon style={styleSheet.preview} stroke={styles.borderColor} />
